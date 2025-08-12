@@ -1,7 +1,6 @@
 package com.alura.medapi.model;
 
-import com.alura.medapi.DTO.EnderecoDTO;
-import com.alura.medapi.DTO.MedicoDTO;
+import com.alura.medapi.DTO.AtualizaMedicoDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,6 +22,8 @@ public class Medico {
     private String nome;
     private String email;
     private String crm;
+    private String telefone;
+    private Short ativo;
 
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
@@ -30,11 +31,31 @@ public class Medico {
     @Embedded
     private Endereco endereco;
 
-    public Medico(MedicoDTO medicoDTO){
-        this.nome = medicoDTO.nome();
-        this.crm = medicoDTO.crm();
-        this.email = medicoDTO.email();
-        this.endereco = new Endereco(medicoDTO.enderecoDTO());
+    public Medico(MedicoRecord medicoRecord){
+        this.ativo = 1;
+        this.nome = medicoRecord.nome();
+        this.crm = medicoRecord.crm();
+        this.especialidade= medicoRecord.especialidade();
+        this.telefone = medicoRecord.telefone();
+        this.email = medicoRecord.email();
+        this.endereco = new Endereco(medicoRecord.endereco());
     }
 
+    public void atualizarDados(AtualizaMedicoDTO dto) {
+        if (dto.nome() != null){
+            this.nome = dto.nome();
+        }
+        if (dto.telefone() != null){
+            this.telefone = dto.telefone();
+        }
+        if (dto.endereco() != null){
+            this.endereco.atualizarInformacoes(dto.endereco());
+        }
+
+
+    }
+
+    public void excluirMedico() {
+        this.ativo = 0;
+    }
 }
