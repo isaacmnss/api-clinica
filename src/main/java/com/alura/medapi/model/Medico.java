@@ -1,6 +1,7 @@
 package com.alura.medapi.model;
 
 import com.alura.medapi.DTO.AtualizaMedicoDTO;
+import com.alura.medapi.service.BooleanToSmallIntConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,7 +24,9 @@ public class Medico {
     private String email;
     private String crm;
     private String telefone;
-    private Short ativo;
+
+    @Convert(converter = BooleanToSmallIntConverter.class)
+    private boolean ativo;
 
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
@@ -32,7 +35,7 @@ public class Medico {
     private Endereco endereco;
 
     public Medico(MedicoRecord medicoRecord){
-        this.ativo = 1;
+        this.ativo = true;
         this.nome = medicoRecord.nome();
         this.crm = medicoRecord.crm();
         this.especialidade= medicoRecord.especialidade();
@@ -56,6 +59,6 @@ public class Medico {
     }
 
     public void excluirMedico() {
-        this.ativo = 0;
+        this.ativo = false;
     }
 }
